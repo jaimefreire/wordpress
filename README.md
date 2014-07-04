@@ -12,64 +12,60 @@ With the [Heroku gem](http://devcenter.heroku.com/articles/heroku-command), crea
 
     $ cd wordpress-heroku
     $ heroku create
-    > Creating strange-turtle-1234... done, stack is cedar
-    > http://strange-turtle-1234.herokuapp.com/ | git@heroku.com:strange-turtle-1234.git
-    > Git remote heroku added
+    Creating strange-turtle-1234... done, stack is cedar
+    http://strange-turtle-1234.herokuapp.com/ | git@heroku.com:strange-turtle-1234.git
+    Git remote heroku added
 
 Add a database to your app
 
     $ heroku addons:add heroku-postgresql:dev
-    > Adding heroku-postgresql:dev to strange-turtle-1234... done, v2 (free)
-    > Attached as HEROKU_POSTGRESQL_COLOR
-    > Database has been created and is available
-    > Use `heroku addons:docs heroku-postgresql:dev` to view documentation
+    Adding heroku-postgresql:dev to strange-turtle-1234... done, v2 (free)
+    Attached as HEROKU_POSTGRESQL_COLOR
+    Database has been created and is available
+    Use `heroku addons:docs heroku-postgresql:dev` to view documentation
 
 Promote the database (replace COLOR with the color name from the above output)
 
     $ heroku pg:promote HEROKU_POSTGRESQL_COLOR
-    > Promoting HEROKU_POSTGRESQL_COLOR to DATABASE_URL... done
+    Promoting HEROKU_POSTGRESQL_COLOR to DATABASE_URL... done
+
+Add the ability to send email (i.e. Password Resets etc)
+
+    $ heroku addons:add sendgrid:starter
+    Adding sendgrid:starter on your-app... done, v14 (free)
+    Use `heroku addons:docs sendgrid` to view documentation.
 
 Create a new branch for any configuration/setup changes needed
 
     $ git checkout -b production
 
-Copy the `wp-config.php`
+Store unique keys and salts in Heroku environment variables. Wordpress can provide random values [here](https://api.wordpress.org/secret-key/1.1/salt/).
 
-    $ cp wp-config-sample.php wp-config.php
-
-Update unique keys and salts in `wp-config.php` on lines 48-55. Wordpress can provide random values [here](https://api.wordpress.org/secret-key/1.1/salt/).
-
-    define('AUTH_KEY',         'put your unique phrase here');
-    define('SECURE_AUTH_KEY',  'put your unique phrase here');
-    define('LOGGED_IN_KEY',    'put your unique phrase here');
-    define('NONCE_KEY',        'put your unique phrase here');
-    define('AUTH_SALT',        'put your unique phrase here');
-    define('SECURE_AUTH_SALT', 'put your unique phrase here');
-    define('LOGGED_IN_SALT',   'put your unique phrase here');
-    define('NONCE_SALT',       'put your unique phrase here');
-
-Clear `.gitignore` and commit `wp-config.php`
-
-    $ >.gitignore
-    $ git add .
-    $ git commit -m "Initial WordPress commit"
+    heroku config:set AUTH_KEY='put your unique phrase here' \
+      SECURE_AUTH_KEY='put your unique phrase here' \
+      LOGGED_IN_KEY='put your unique phrase here' \
+      NONCE_KEY='put your unique phrase here' \
+      AUTH_SALT='put your unique phrase here' \
+      SECURE_AUTH_SALT='put your unique phrase here' \
+      LOGGED_IN_SALT='put your unique phrase here' \
+      NONCE_SALT='put your unique phrase here'
 
 Deploy to Heroku
 
     $ git push heroku production:master
-    > -----> Heroku receiving push
-    > -----> PHP app detected
-    > -----> Bundling Apache v2.2.22
-    > -----> Bundling PHP v5.3.10
-    > -----> Discovering process types
-    >        Procfile declares types -> (none)
-    >        Default types for PHP   -> web
-    > -----> Compiled slug size is 13.8MB
-    > -----> Launcing... done, v5
-    >        http://strange-turtle-1234.herokuapp.com deployed to Heroku
-    >
-    > To git@heroku:strange-turtle-1234.git
-    > * [new branch]    production -> master
+    -----> Heroku receiving push
+    -----> PHP app detected
+    -----> Bundling Apache v2.2.22
+    -----> Bundling PHP v5.3.10
+    -----> Discovering process types
+           Procfile declares types -> (none)
+           Default types for PHP   -> web
+    -----> Compiled slug size is 13.8MB
+    -----> Launcing... done, v5
+           http://strange-turtle-1234.herokuapp.com deployed to Heroku
+
+    To git@heroku:strange-turtle-1234.git
+      * [new branch]    production -> master
 
 After deployment WordPress has a few more steps to setup and thats it!
 
@@ -97,11 +93,24 @@ WordPress needs to update the database. After push, navigate to:
 WordPress will prompt for updating the database. After that you'll be good
 to go.
 
+## Deployment optimisation
+
+If you have files that you want tracked in your repo, but do not need deploying (for example, *.md, *.pdf, *.zip). Then add path or linux file match to the `.slugignore` file & these will not be deployed.
+
+Examples:
+```
+path/to/ignore/
+bin/
+*.md
+*.pdf
+*.zip
+```
+
 ## Wiki
 
 * [Custom Domains](https://github.com/mhoofman/wordpress-heroku/wiki/Custom-Domains)
 * [Media Uploads](https://github.com/mhoofman/wordpress-heroku/wiki/Media-Uploads)
 * [Postgres Database Syncing](https://github.com/mhoofman/wordpress-heroku/wiki/Postgres-Database-Syncing)
-* [Setting Up a Local Environment on Linux (Apache)](https://github.com/mhoofman/wordpress-heroku/wiki/Setting-Up-a-Local-Environment-on-Linux-(Apache))
+* [Setting Up a Local Environment on Linux (Apache)](https://github.com/mhoofman/wordpress-heroku/wiki/Setting-Up-a-Local-Environment-on-Linux-(Apache\))
 * [Setting Up a Local Environment on Mac OS X](https://github.com/mhoofman/wordpress-heroku/wiki/Setting-Up-a-Local-Environment-on-Mac-OS-X)
 * [More...](https://github.com/mhoofman/wordpress-heroku/wiki)
