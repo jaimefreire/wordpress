@@ -4,7 +4,7 @@
 
     <?php if ( have_posts() ) : ?>
       <?php if ( is_category() ) { ?>
-        <h3 class="pagetitle"><?php _e( 'Archive of','zinnia-theme' ); ?> &#8216;<?php single_cat_title(); ?>&#8217; <?php _e( 'category','zinnia-theme' ); ?></h3>
+        <h3 class="pagetitle"><?php _e( '','zinnia-theme' ); ?> &#8216;<?php single_cat_title(); ?>&#8217; <?php _e( '','zinnia-theme' ); ?></h3>
       <?php } elseif ( is_tag() ) { ?>
         <h3 class="pagetitle"><?php _e( 'Posts Tagged','zinnia-theme' ); ?> &#8216;<?php single_tag_title(); ?>&#8217;</h3>
       <?php } elseif ( is_day() ) { ?>
